@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إنشاء حساب - Alpha Hosting</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="auth-page">
+        <div class="auth-screen">
+            <div class="auth-container">
+                <div class="auth-logo">Alpha <span>Hosting</span></div>
+                <p class="auth-subtitle">استضافة خوادم ألعاب وبوتات احترافية</p>
+
+                <div class="auth-tabs">
+                    <a href="login.html" class="auth-tab">تسجيل الدخول</a>
+                    <a href="register.html" class="auth-tab active">إنشاء حساب</a>
+                </div>
+
+                <form id="registerForm" class="auth-form active">
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-user"></i> اسم المستخدم (فريد)</label>
+                        <input type="text" id="regUsername" placeholder="ahmed_dev" required />
+                        <small>سيستخدم لتسجيل الدخول</small>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-envelope"></i> البريد الإلكتروني</label>
+                        <input type="email" id="regEmail" placeholder="example@domain.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> كلمة المرور</label>
+                        <input type="password" id="regPassword" placeholder="•••••••• (8 أحرف على الأقل)" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> تأكيد كلمة المرور</label>
+                        <input type="password" id="regConfirmPassword" placeholder="••••••••" required />
+                    </div>
+                    <div class="form-options">
+                        <label><input type="checkbox" id="acceptTerms" /> أوافق على <a href="#">الشروط والأحكام</a></label>
+                    </div>
+                    <button type="submit" class="btn-primary auth-btn">
+                        <i class="fa-solid fa-user-plus"></i> إنشاء حساب
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>أو</span>
+                </div>
+
+                <p class="auth-footer">
+                    لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth-system.js"></script>
+    <script>
+        // ربط نموذج إنشاء حساب
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('regUsername').value.trim();
+                    const email = document.getElementById('regEmail').value.trim();
+                    const password = document.getElementById('regPassword').value;
+                    const confirm = document.getElementById('regConfirmPassword').value;
+                    const terms = document.getElementById('acceptTerms')?.checked;
+                    const btn = registerForm.querySelector('.auth-btn');
+
+                    if (!username || !email || !password || !confirm) {
+                        showToast('جميع الحقول مطلوبة', 'warning');
+                        return;
+                    }
+                    if (password !== confirm) {
+                        showToast('كلمة المرور غير متطابقة', 'error');
+                        return;
+                    }
+                    if (password.length < 8) {
+                        showToast('كلمة المرور 8 أحرف على الأقل', 'warning');
+                        return;
+                    }
+                    if (!terms) {
+                        showToast('الرجاء الموافقة على الشروط', 'warning');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري...';
+                    
+                    const result = await authSystem.register(username, email, password, confirm);
+                    
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> إنشاء حساب';
+                    
+                    showToast(result.message, result.success ? 'success' : 'error');
+                    
+                    if (result.success) {
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

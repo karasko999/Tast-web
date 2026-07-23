@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول - Alpha Hosting</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="auth-page">
+        <div class="auth-screen">
+            <div class="auth-container">
+                <div class="auth-logo">Alpha <span>Hosting</span></div>
+                <p class="auth-subtitle">استضافة خوادم ألعاب وبوتات احترافية</p>
+
+                <div class="auth-tabs">
+                    <a href="login.html" class="auth-tab active">تسجيل الدخول</a>
+                    <a href="register.html" class="auth-tab">إنشاء حساب</a>
+                </div>
+
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-user"></i> اسم المستخدم أو البريد الإلكتروني</label>
+                        <input type="text" id="loginIdentifier" placeholder="اسم المستخدم أو example@domain.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-regular fa-lock"></i> كلمة المرور</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required />
+                    </div>
+                    <div class="form-options">
+                        <label><input type="checkbox" id="rememberMe" /> تذكرني</label>
+                        <a href="#" onclick="forgotPassword()">نسيت كلمة المرور؟</a>
+                    </div>
+                    <button type="submit" class="btn-primary auth-btn">
+                        <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>أو</span>
+                </div>
+
+                <p class="auth-footer">
+                    ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth-system.js"></script>
+    <script>
+        // ربط نموذج تسجيل الدخول
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const identifier = document.getElementById('loginIdentifier').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    const btn = loginForm.querySelector('.auth-btn');
+                    
+                    if (!identifier || !password) {
+                        showToast('يرجى إدخال جميع البيانات', 'warning');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري...';
+                    
+                    const result = await authSystem.login(identifier, password);
+                    
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول';
+                    
+                    showToast(result.message, result.success ? 'success' : 'error');
+                    
+                    if (result.success) {
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1000);
+                    }
+                });
+            }
+        });
+
+        // دالة استعادة كلمة المرور
+        window.forgotPassword = async function() {
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            if (!identifier) {
+                showToast('يرجى إدخال بريدك الإلكتروني أولاً', 'warning');
+                return;
+            }
+            if (!authSystem.validateEmail(identifier)) {
+                showToast('يرجى إدخال بريد إلكتروني صحيح', 'warning');
+                return;
+            }
+            const result = await authSystem.sendPasswordReset(identifier);
+            showToast(result.message, result.success ? 'success' : 'error');
+        };
+    </script>
+</body>
+</html>
