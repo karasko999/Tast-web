@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VelocityHost - استضافة ألعاب وبوتات</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- حاوية التنبيهات -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ========================================= -->
+    <!-- 1. شاشة تسجيل الدخول (بريد + رابط سحري) -->
+    <!-- ========================================= -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-logo">Velocity<span>Host</span></div>
+            <p class="auth-subtitle">استضافة خوادم ألعاب وبوتات</p>
+
+            <h2 style="text-align:center;margin:10px 0 5px;">تسجيل الدخول</h2>
+            <p style="text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:25px;">
+                أدخل بريدك الإلكتروني وسنرسل لك رابط التحقق
+            </p>
+
+            <!-- نموذج إرسال الرابط -->
+            <form id="magicLinkForm">
+                <div class="form-group">
+                    <label><i class="fa-regular fa-envelope"></i> البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="example@domain.com" required />
+                </div>
+                <button type="submit" class="btn-primary" id="sendLinkBtn">
+                    <i class="fa-solid fa-envelope"></i> إرسال رابط التحقق
+                </button>
+            </form>
+
+            <div style="margin-top:20px;text-align:center;color:var(--text-muted);font-size:13px;">
+                <i class="fa-solid fa-shield-halved"></i> سيصلك رابط سحري آمن بدلاً من كلمة المرور
+            </div>
+            <p class="auth-footer" style="margin-top:20px;">
+                بتسجيل الدخول أنت توافق على <a href="#">شروط الخدمة</a> و <a href="#">سياسة الخصوصية</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- 2. التطبيق الرئيسي (بعد تسجيل الدخول) -->
+    <!-- ========================================= -->
+    <div id="app-screen" class="app-screen" style="display:none;">
+        <!-- الشريط العلوي -->
+        <nav class="navbar">
+            <div class="logo">Velocity<span>Host</span></div>
+            <div class="nav-links">
+                <a class="active" onclick="navigateTo('home')"><i class="fa-solid fa-house"></i> الرئيسية</a>
+                <a onclick="navigateTo('store')"><i class="fa-solid fa-store"></i> المتجر</a>
+                <a onclick="navigateTo('dashboard')"><i class="fa-solid fa-user"></i> ملفي الشخصي</a>
+            </div>
+            <div class="nav-user">
+                <span class="user-badge">
+                    <i class="fa-regular fa-circle-user"></i>
+                    <span id="userDisplayName">مستخدم</span>
+                </span>
+                <button class="btn-logout" onclick="handleLogout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+            </div>
+        </nav>
+
+        <!-- ====== صفحة الرئيسية ====== -->
+        <div id="page-home" class="page active">
+            <div class="hero-section">
+                <h1>أهلاً بك في <span class="accent">VelocityHost</span></h1>
+                <p>استضافة ألعاب وبوتات بسرعة البرق، حماية احترافية، ودعم فني 24/7</p>
+                <button class="btn-primary hero-btn" onclick="navigateTo('store')">
+                    <i class="fa-solid fa-rocket"></i> تصفح المتجر
+                </button>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fa-solid fa-server"></i>
+                    <h3>خوادم NVMe</h3>
+                    <p>أداء فائق السرعة</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>حماية DDoS</h3>
+                    <p>أمان كامل لخوادمك</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fa-solid fa-headset"></i>
+                    <h3>دعم فني 24/7</h3>
+                    <p>فريق محترف على مدار الساعة</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== صفحة المتجر ====== -->
+        <div id="page-store" class="page">
+            <div class="page-header">
+                <h2><i class="fa-solid fa-store"></i> المتجر</h2>
+                <p class="sub-desc">اختر خطتك المفضلة وابدأ الآن</p>
+            </div>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="game" onclick="filterPlans('game')">
+                    <i class="fa-solid fa-gamepad"></i> ألعاب
+                </button>
+                <button class="filter-btn" data-filter="bot" onclick="filterPlans('bot')">
+                    <i class="fa-solid fa-robot"></i> بوتات
+                </button>
+            </div>
+            <div id="plansContainer" class="plans-grid">
+                <p class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل الخطط...</p>
+            </div>
+        </div>
+
+        <!-- ====== صفحة الملف الشخصي ====== -->
+        <div id="page-dashboard" class="page">
+            <div class="page-header">
+                <h2><i class="fa-regular fa-user"></i> ملفي الشخصي</h2>
+                <p class="sub-desc">إدارة حسابك وطلباتك</p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fa-regular fa-circle-user"></i>
+                    </div>
+                    <h3 id="profileFullName">اسم المستخدم</h3>
+                    <p id="profileEmail" class="muted">البريد الإلكتروني</p>
+                    <p id="profileUsername" class="muted">@username</p>
+                    <div class="profile-meta">
+                        <span><i class="fa-regular fa-calendar"></i> عضو منذ: <span id="profileSince">اليوم</span></span>
+                    </div>
+                    <hr />
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="orderCount">0</span>
+                            <span class="stat-label">الطلبات</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="activeOrders">0</span>
+                            <span class="stat-label">نشطة</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="orders-card">
+                    <h4><i class="fa-regular fa-receipt"></i> طلباتي السابقة</h4>
+                    <div id="ordersList">
+                        <p class="empty-state"><i class="fa-regular fa-inbox"></i> لا توجد طلبات حتى الآن</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- تحميل Firebase والملفات -->
+    <!-- ========================================= -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="auth-system.js"></script>
+    <script src="main.js"></script>
+    <script src="store.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
