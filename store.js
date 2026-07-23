@@ -1,4 +1,4 @@
-// store.js - إدارة المتجر مع تصنيفات متعددة
+// store.js - إدارة المتجر مع تصنيفات متعددة (بدون خطط افتراضية)
 
 let allPlans = [];
 let currentMainCategory = 'games';
@@ -7,7 +7,7 @@ let currentSubCategory = 'cs2';
 // تعريف التصنيفات الفرعية لكل تصنيف رئيسي
 const subCategoriesMap = {
     games: [
-        { id: 'cs2', icon: '🔫', label: 'CS2' },
+        { id: 'cs2', icon: '🎯', label: 'CS2' },
         { id: 'minecraft', icon: '⛏️', label: 'Minecraft' },
         { id: 'samp', icon: '🚗', label: 'SAMP' },
         { id: 'mta', icon: '🏎️', label: 'MTA' }
@@ -22,7 +22,7 @@ const subCategoriesMap = {
     ]
 };
 
-// ─── جلب الخطط ───
+// ─── جلب الخطط من Firebase ───
 async function loadPlans() {
     const container = document.getElementById('plansContainer');
     container.innerHTML = `<p class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل الخطط...</p>`;
@@ -32,60 +32,22 @@ async function loadPlans() {
         if (result.success && result.plans.length > 0) {
             allPlans = result.plans;
         } else {
-            allPlans = getDefaultPlans();
+            allPlans = []; // 🔥 بدون خطط افتراضية
         }
         renderPlans();
     } catch (error) {
         console.error('خطأ في تحميل الخطط:', error);
-        allPlans = getDefaultPlans();
+        allPlans = [];
         renderPlans();
     }
 }
 window.loadPlans = loadPlans;
 
-// ─── البيانات الافتراضية ───
-function getDefaultPlans() {
-    return [
-        // ألعاب - CS2
-        { id: 'cs2-starter', mainCategory: 'games', subCategory: 'cs2', name: 'ستارتر CS2', price: 20, cpu: '2 نوى', ram: '4GB', disk: '30GB NVMe', features: ['حماية أساسية', 'دعم عادي', 'تشغيل 24/7'] },
-        { id: 'cs2-pro', mainCategory: 'games', subCategory: 'cs2', name: 'برو CS2', price: 45, cpu: '4 نوى', ram: '8GB', disk: '60GB NVMe', features: ['حماية DDoS', 'دعم أولوية', 'موقع ويب'] },
-        { id: 'cs2-ultra', mainCategory: 'games', subCategory: 'cs2', name: 'ألترا CS2', price: 75, cpu: '8 نوى', ram: '16GB', disk: '120GB NVMe', features: ['حماية فائقة', 'دعم VIP', 'موقع ويب + قاعدة بيانات'] },
-        
-        // ألعاب - Minecraft
-        { id: 'mc-starter', mainCategory: 'games', subCategory: 'minecraft', name: 'ستارتر ماينكرافت', price: 15, cpu: '2 نوى', ram: '4GB', disk: '20GB NVMe', features: ['حماية أساسية', 'مودات محدودة', 'تشغيل 24/7'] },
-        { id: 'mc-pro', mainCategory: 'games', subCategory: 'minecraft', name: 'برو ماينكرافت', price: 35, cpu: '4 نوى', ram: '8GB', disk: '50GB NVMe', features: ['حماية DDoS', 'مودات غير محدودة', 'دعم أولوية'] },
-        { id: 'mc-ultra', mainCategory: 'games', subCategory: 'minecraft', name: 'ألترا ماينكرافت', price: 60, cpu: '8 نوى', ram: '16GB', disk: '100GB NVMe', features: ['حماية فائقة', 'مودات + إضافات', 'دعم VIP'] },
-        
-        // ألعاب - SAMP
-        { id: 'samp-starter', mainCategory: 'games', subCategory: 'samp', name: 'ستارتر SAMP', price: 12, cpu: '1 نوى', ram: '2GB', disk: '15GB SSD', features: ['حماية أساسية', 'تشغيل 24/7'] },
-        { id: 'samp-pro', mainCategory: 'games', subCategory: 'samp', name: 'برو SAMP', price: 25, cpu: '2 نوى', ram: '4GB', disk: '30GB SSD', features: ['حماية DDoS', 'دعم أولوية'] },
-        
-        // ألعاب - MTA
-        { id: 'mta-starter', mainCategory: 'games', subCategory: 'mta', name: 'ستارتر MTA', price: 12, cpu: '1 نوى', ram: '2GB', disk: '15GB SSD', features: ['حماية أساسية', 'تشغيل 24/7'] },
-        { id: 'mta-pro', mainCategory: 'games', subCategory: 'mta', name: 'برو MTA', price: 25, cpu: '2 نوى', ram: '4GB', disk: '30GB SSD', features: ['حماية DDoS', 'دعم أولوية'] },
-        
-        // سيرفرات - RDP
-        { id: 'rdp-starter', mainCategory: 'servers', subCategory: 'rdp', name: 'RDP ستارتر', price: 30, cpu: '2 نوى', ram: '4GB', disk: '50GB SSD', features: ['وصول كامل', 'حماية أساسية', 'دعم 24/7'] },
-        { id: 'rdp-pro', mainCategory: 'servers', subCategory: 'rdp', name: 'RDP برو', price: 55, cpu: '4 نوى', ram: '8GB', disk: '100GB NVMe', features: ['وصول كامل', 'حماية DDoS', 'دعم أولوية'] },
-        
-        // سيرفرات - VPS
-        { id: 'vps-starter', mainCategory: 'servers', subCategory: 'vps', name: 'VPS ستارتر', price: 40, cpu: '2 نوى', ram: '4GB', disk: '50GB SSD', features: ['روoot وصول', 'حماية أساسية', 'دعم 24/7'] },
-        { id: 'vps-pro', mainCategory: 'servers', subCategory: 'vps', name: 'VPS برو', price: 70, cpu: '4 نوى', ram: '8GB', disk: '100GB NVMe', features: ['روoot وصول', 'حماية DDoS', 'دعم أولوية'] },
-        
-        // بوتات - Discord
-        { id: 'discord-starter', mainCategory: 'bots', subCategory: 'discord', name: 'بوت ديسكورد صغير', price: 8, cpu: '1 نوى', ram: '1GB', disk: '5GB SSD', features: ['تشغيل 24/7', 'مجلدات غير محدودة'] },
-        { id: 'discord-pro', mainCategory: 'bots', subCategory: 'discord', name: 'بوت ديسكورد احترافي', price: 20, cpu: '2 نوى', ram: '4GB', disk: '20GB SSD', features: ['تشغيل 24/7', 'سجلات متقدمة', 'دعم خاص'] },
-        
-        // بوتات - Telegram
-        { id: 'telegram-starter', mainCategory: 'bots', subCategory: 'telegram', name: 'بوت تيليجرام صغير', price: 8, cpu: '1 نوى', ram: '1GB', disk: '5GB SSD', features: ['تشغيل 24/7', 'مجلدات غير محدودة'] },
-        { id: 'telegram-pro', mainCategory: 'bots', subCategory: 'telegram', name: 'بوت تيليجرام احترافي', price: 20, cpu: '2 نوى', ram: '4GB', disk: '20GB SSD', features: ['تشغيل 24/7', 'سجلات متقدمة', 'دعم خاص'] }
-    ];
-}
-
 // ─── التبديل بين التصنيفات الرئيسية ───
 function switchMainCategory(category) {
     currentMainCategory = category;
-    currentSubCategory = subCategoriesMap[category][0]?.id || subCategoriesMap[category][0]?.id;
+    const subCats = subCategoriesMap[category] || [];
+    currentSubCategory = subCats[0]?.id || '';
     
     // تحديث الأزرار النشطة
     document.querySelectorAll('.store-cat-btn').forEach(btn => {
@@ -112,7 +74,8 @@ function renderSubCategories() {
         const isActive = currentSubCategory === sub.id;
         html += `
             <button class="sub-cat-btn ${isActive ? 'active' : ''}" onclick="switchSubCategory('${sub.id}')">
-                ${sub.icon} ${sub.label}
+                <span class="sub-icon">${sub.icon}</span>
+                <span class="sub-label">${sub.label}</span>
             </button>
         `;
     });
@@ -140,14 +103,14 @@ function renderPlans() {
     
     if (filtered.length === 0) {
         container.innerHTML = `
-            <p class="empty-state">
-                <i class="fa-regular fa-folder-open"></i>
-                لا توجد خطط في هذا التصنيف
-                <br />
-                <small style="color:var(--text-muted);font-size:13px;">
-                    تصفح التصنيفات الأخرى
-                </small>
-            </p>
+            <div class="empty-state-modern">
+                <div class="empty-icon">📦</div>
+                <h3>لا توجد خطط في هذا التصنيف</h3>
+                <p class="muted">قم بإضافة خطط جديدة من لوحة تحكم الأدمن</p>
+                <button class="btn-primary" style="width:auto;padding:12px 35px;margin-top:15px;" onclick="navigateTo('admin')">
+                    <i class="fa-solid fa-plus"></i> إضافة خطة
+                </button>
+            </div>
         `;
         return;
     }
@@ -194,7 +157,7 @@ function getMainCategoryLabel(category) {
 
 function getSubCategoryLabel(sub) {
     const labels = {
-        'cs2': '🔫 CS2',
+        'cs2': '🎯 CS2',
         'minecraft': '⛏️ Minecraft',
         'samp': '🚗 SAMP',
         'mta': '🏎️ MTA',
@@ -252,8 +215,7 @@ window.orderPlan = orderPlan;
 
 // ─── تهيئة المتجر عند التحميل ───
 document.addEventListener('DOMContentLoaded', () => {
-    // عرض التصنيفات الفرعية الأولية
     renderSubCategories();
 });
 
-console.log('✅ store.js (مع تصنيفات متعددة) جاهز');
+console.log('✅ store.js (بدون خطط افتراضية) جاهز');

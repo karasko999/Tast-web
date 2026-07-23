@@ -1343,3 +1343,310 @@ table {
         transform: scale(1);
     }
 }
+/* =========================================================
+   🎯 أنماط التصنيفات المطورة (Classic + Modern)
+   ========================================================= */
+
+/* ─── التصنيفات الرئيسية ─── */
+.store-categories {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.store-cat-btn {
+    position: relative;
+    padding: 14px 32px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-family: var(--font);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+    min-width: 120px;
+    justify-content: center;
+}
+
+/* تأثير الخلفية المتدرجة */
+.store-cat-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    border-radius: var(--radius-full);
+}
+
+/* النص فوق الخلفية */
+.store-cat-btn span,
+.store-cat-btn i {
+    position: relative;
+    z-index: 1;
+}
+
+/* حالة النشاط */
+.store-cat-btn.active {
+    border-color: var(--accent);
+    color: var(--text-inverse);
+    box-shadow: 0 4px 25px var(--accent-glow-strong);
+}
+.store-cat-btn.active::before {
+    opacity: 1;
+}
+
+/* حالة التحويم */
+.store-cat-btn:hover:not(.active) {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* تأثير النقر */
+.store-cat-btn:active {
+    transform: scale(0.95);
+}
+
+/* أيقونة التصنيف */
+.store-cat-btn .cat-icon {
+    font-size: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── التصنيفات الفرعية ─── */
+.sub-categories {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.sub-cat-btn {
+    position: relative;
+    padding: 10px 22px;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-family: var(--font);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+/* تأثير التحويم */
+.sub-cat-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width var(--transition-normal);
+}
+.sub-cat-btn:hover::after {
+    width: 60%;
+}
+
+.sub-cat-btn:hover:not(.active) {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+/* حالة النشاط */
+.sub-cat-btn.active {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.sub-cat-btn .sub-icon {
+    font-size: 18px;
+}
+.sub-cat-btn .sub-label {
+    font-size: var(--font-size-sm);
+}
+
+/* ─── حالة عدم وجود خطط (مطورة) ─── */
+.empty-state-modern {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    border: 2px dashed var(--border-color);
+}
+.empty-state-modern .empty-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+    display: block;
+}
+.empty-state-modern h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.empty-state-modern p {
+    color: var(--text-muted);
+    font-size: 16px;
+}
+
+/* ─── تأثيرات إضافية للتصنيفات ─── */
+
+/* نبض خفيف للأيقونة عند التحويم */
+.store-cat-btn:hover .cat-icon {
+    animation: pulse-icon 0.8s ease infinite;
+}
+
+@keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* تأثير التموج عند النقر */
+.store-cat-btn .ripple,
+.sub-cat-btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple-effect 0.6s ease;
+    pointer-events: none;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   🎨 تحديثات البطاقات لتتناسب مع التصنيفات الجديدة
+   ========================================================= */
+
+.plan-card {
+    background: var(--bg-secondary);
+    padding: 28px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* شريط علوي متدرج */
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+.plan-card:hover::before {
+    opacity: 1;
+}
+
+.plan-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px var(--accent-glow);
+}
+
+/* شارة الخطة */
+.plan-card .plan-badge {
+    display: inline-block;
+    padding: 5px 16px;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 700;
+    align-self: flex-start;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+/* =========================================================
+   📱 تحسينات الجوال للتصنيفات الجديدة
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .store-categories {
+        gap: 8px;
+    }
+    .store-cat-btn {
+        padding: 10px 18px;
+        font-size: var(--font-size-sm);
+        min-width: 80px;
+    }
+    .store-cat-btn .cat-icon {
+        font-size: 16px;
+    }
+    
+    .sub-categories {
+        gap: 6px;
+        padding: 6px;
+    }
+    .sub-cat-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+        min-width: 60px;
+    }
+    .sub-cat-btn .sub-icon {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .store-cat-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+        min-width: 60px;
+        gap: 6px;
+    }
+    .store-cat-btn .cat-icon {
+        font-size: 14px;
+    }
+    .sub-cat-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 50px;
+    }
+    .sub-cat-btn .sub-icon {
+        font-size: 12px;
+    }
+    .sub-cat-btn .sub-label {
+        font-size: 11px;
+    }
+}

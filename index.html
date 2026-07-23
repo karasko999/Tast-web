@@ -112,36 +112,46 @@
             </div>
         </div>
 
-        <!-- ====== صفحة المتجر (معدلة) ====== -->
-        <div id="page-store" class="page">
-            <div class="page-header">
-                <h2><i class="fa-solid fa-store"></i> المتجر</h2>
-                <p class="sub-desc">اختر التصنيف ثم الخطة المناسبة</p>
-            </div>
-            
-            <!-- التصنيفات الرئيسية -->
-            <div class="store-categories">
-                <button class="store-cat-btn active" data-main="games" onclick="switchMainCategory('games')">
-                    <i class="fa-solid fa-gamepad"></i> ألعاب
-                </button>
-                <button class="store-cat-btn" data-main="servers" onclick="switchMainCategory('servers')">
-                    <i class="fa-solid fa-server"></i> سيرفرات
-                </button>
-                <button class="store-cat-btn" data-main="bots" onclick="switchMainCategory('bots')">
-                    <i class="fa-solid fa-robot"></i> بوتات
-                </button>
-            </div>
+   <!-- ====== صفحة المتجر ====== -->
+<div id="page-store" class="page">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-store"></i> المتجر</h2>
+        <p class="sub-desc">اختر التصنيف ثم الخطة المناسبة</p>
+    </div>
+    
+    <!-- التصنيفات الرئيسية -->
+    <div class="store-categories">
+        <button class="store-cat-btn active" data-main="games" onclick="switchMainCategory('games')">
+            <span class="cat-icon">🎮</span>
+            <span>ألعاب</span>
+        </button>
+        <button class="store-cat-btn" data-main="servers" onclick="switchMainCategory('servers')">
+            <span class="cat-icon">🖥️</span>
+            <span>سيرفرات</span>
+        </button>
+        <button class="store-cat-btn" data-main="bots" onclick="switchMainCategory('bots')">
+            <span class="cat-icon">🤖</span>
+            <span>بوتات</span>
+        </button>
+    </div>
 
-            <!-- التصنيفات الفرعية -->
-            <div id="subCategoriesContainer" class="sub-categories">
-                <!-- سيتم تعبئتها بواسطة JavaScript -->
-            </div>
+    <!-- التصنيفات الفرعية -->
+    <div id="subCategoriesContainer" class="sub-categories">
+        <!-- سيتم تعبئتها بواسطة JavaScript -->
+    </div>
 
-            <!-- عرض الخطط -->
-            <div id="plansContainer" class="plans-grid">
-                <p class="loading-text"><i class="fa-solid fa-spinner fa-spin"></i> جاري تحميل الخطط...</p>
-            </div>
+    <!-- عرض الخطط -->
+    <div id="plansContainer" class="plans-grid">
+        <div class="empty-state-modern">
+            <span class="empty-icon">📦</span>
+            <h3>لا توجد خطط</h3>
+            <p class="muted">قم بإضافة خطط جديدة من لوحة تحكم الأدمن</p>
+            <button class="btn-primary" style="width:auto;padding:12px 35px;margin-top:15px;" onclick="navigateTo('admin')">
+                <i class="fa-solid fa-plus"></i> إضافة خطة
+            </button>
         </div>
+    </div>
+</div>
 
         <!-- ====== صفحة الملف الشخصي ====== -->
         <div id="page-dashboard" class="page">
